@@ -17,6 +17,7 @@ pairEndSeq=true #single or pair
 
 ############################################################
 #Pre-Processing and Variant Calling
+#Removing .bam,.sam intermediary files to save storage on the Cluster
 
 #process in batches if necessary
 ls --format="single-column" $dataDir > tmpDataFiles.txt
@@ -32,9 +33,9 @@ while read -r line1; do
 	#Map reads to reference
 	if [ $pairEndSeq = true ] 
 	then
-		bwa mem ucsc.hg19.fasta dbGAP-ARDS-fastq/$line2.fastq dbGAP-ARDS-fastq/$line1.fastq > $fName.sam
+		bwa mem ucsc.hg19.fasta dbGAP-ARDS-fastq/$line2 dbGAP-ARDS-fastq/$line1 > $fName.sam
 	else
-		bwa mem ucsc.hg19.fasta dbGAP-ARDS-fastq/$line1.fastq > $fName.sam
+		bwa mem ucsc.hg19.fasta dbGAP-ARDS-fastq/$line1 > $fName.sam
 	fi
 	
 	java -jar $PICARD/SortSam.jar \
@@ -48,7 +49,9 @@ while read -r line1; do
 	INPUT=$fName.bam \
 	OUTPUT=$fName''_dedup.bam \
 	METRICS_FILE=metrics.txt
-
+	
+	rm $fName.bam
+	
 	java -jar $PICARD/AddOrReplaceReadGroups.jar \
 	RGLB=L001 \
 	RGPL=illumina \
@@ -75,7 +78,7 @@ while read -r line1; do
 	-targetIntervals $fName''_realigner.intervals \
 	-known Mills_and_1000G_gold_standard.indels.hg19.sites.vcf \
 	-o $fName''_realigned.bam
-
+	
 	rm $fName''_AddOrReplaceReadGroups.bam
 
 	
@@ -94,7 +97,7 @@ while read -r line1; do
 	-BQSR $fName''_BaseRecalibrator.grp \
 	-I $fName''_realigned.bam \
 	-o $fName''_PrintReads.bam
-
+	
 	rm $fName''_realigned.bam
 
 	$GATK \
@@ -107,7 +110,9 @@ while read -r line1; do
 	-stand_emit_conf 10 \
 	-stand_call_conf 30 \
 	-o raw''_$fName.g.vcf
-
+	
+	rm $fName''_PrintReads.bam
+	
 done < tmpDataFiles.txt
 
 rm tmpDataFiles.txt
