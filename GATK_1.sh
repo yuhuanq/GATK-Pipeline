@@ -5,7 +5,9 @@
 #$ -o /data/scratch/ARDS/ARDS_$JOB_ID.out
 #$ -e /data/scratch/ARDS/cuffdiff_$JOB_ID.err
 #$ -q all.q
-###################qsub [options] above#######################
+###################qsub [options] above#####################
+#  Created by Yuhuan Qiu on 6/10/16.
+#  yq56@cornell.edu
 ############################################################
 # Softwares file locations, and other settings; change accordingly
 
@@ -17,6 +19,7 @@ pairEndSeq=true #single or pair
 
 ############################################################
 #Pre-Processing and Variant Calling
+############################################################
 #Removing .bam,.sam intermediary files to save storage on the Cluster
 
 #process in batches if necessary
