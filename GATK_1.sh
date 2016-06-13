@@ -16,9 +16,10 @@ dataDir="/data/scratch/ARDS/dbGAP-ARDS-fastq" #for Pair-end seq data make sure f
 pairEndSeq=true #single or pair
 
 ############################################################
+#Pre-Processing and Variant Calling
 
+#process in batches if necessary
 ls --format="single-column" $dataDir > tmpDataFiles.txt
-
 
 while read -r line1; do
 	if [ $pairEndSeq = true ] 
@@ -28,11 +29,12 @@ while read -r line1; do
 
 	fName=$(echo $line1 | grep -oP "SRR[0-9]*")
 	
+	#Map reads to reference
 	if [ $pairEndSeq = true ] 
 	then
-		bwa mem ucsc.hg19.fasta dbGAP-ARDS-fastq/$line2.fastq dbGAP-ARDS-fastq/$line1.fastq > $fName.sam #read alignment
+		bwa mem ucsc.hg19.fasta dbGAP-ARDS-fastq/$line2.fastq dbGAP-ARDS-fastq/$line1.fastq > $fName.sam
 	else
-		bwa mem ucsc.hg19.fasta dbGAP-ARDS-fastq/$line1.fastq > $fName.sam #read alignment
+		bwa mem ucsc.hg19.fasta dbGAP-ARDS-fastq/$line1.fastq > $fName.sam
 	fi
 	
 	java -jar $PICARD/SortSam.jar \
