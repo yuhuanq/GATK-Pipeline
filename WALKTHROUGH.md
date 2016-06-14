@@ -22,9 +22,14 @@ Picard Tools: http://broadinstitute.github.io/picard/
 Samtools: http://www.htslib.org/download/
 
 
-### Placeholder
+### Mapping reads to Reference
 
-Placeholder
+Next-generation Sequencing (NGS) -> enormous pile of short reads. Need to align/map to reference genome. 
+
+For DNAseq, map reads using Burrows-Wheeler Aligner, 'bwa mem' algorithm. 
+```bash
+>>> bwa mem -M [reference] yourFile.fastq > yourFile.sam
+```
 
 ### Placeholder
 
