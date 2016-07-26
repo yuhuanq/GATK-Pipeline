@@ -1,6 +1,5 @@
 #!/bin/sh
 #$ -N ARDS_exom-seq
-#$ -j y
 #$ -cwd
 #$ -o /data/scratch/ARDS/ARDS_$JOB_ID.out
 #$ -e /data/scratch/ARDS/cuffdiff_$JOB_ID.err
